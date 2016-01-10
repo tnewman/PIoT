@@ -1,2 +1,2 @@
-# piofthings
-PI of Things (PIoT) - Raspberry Pi-based Internet of Things Platform
+# PIoT
+PI of Things (PIOT) - Raspberry Pi-based Internet of Things Platform
