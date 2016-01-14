@@ -12,8 +12,9 @@ setup(
         'pytest-runner',
     ],
     install_requires=[
-		'sqlalchemy',
         'python-periphery',
+        'sqlalchemy',
+        'twilio',
     ],
     tests_require=[
         'pytest',
