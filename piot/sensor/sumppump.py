@@ -38,3 +38,5 @@ class SumpPump(BaseAnalogSensor):
 
         trig.close()
         echo.close()
+
+        return distance
