@@ -1,5 +1,5 @@
-from piot.sensor.baseanalogsensor import BaseAnalogSensor
-from piot.sensor.basedigitalsensor import BaseDigitalSensor
+from piot.sensor.base import BaseAnalogSensor
+from piot.sensor.base import BaseDigitalSensor
 import importlib
 import pkgutil
 import os
