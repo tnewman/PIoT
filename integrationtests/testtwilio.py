@@ -23,8 +23,6 @@ while True:
     print('Did you receieve an SMS [Yes/No]')
     result=input()
     
-    print(result)
-    
     if result.lower()=='yes':
         print('Test Passed')
         exit(0)
