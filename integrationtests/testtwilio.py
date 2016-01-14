@@ -6,7 +6,9 @@ sys.path.append('.')
 from piot.notification import TwilioSMSNotification
 from twilio import TwilioRestException 
 
+print('==================')
 print('Twilio Test Script')
+print('==================')
 
 while True:
     twilio_notification=TwilioSMSNotification()
