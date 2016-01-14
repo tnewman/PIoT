@@ -5,9 +5,10 @@ class BaseSensor:
 
 class BaseAnalogSensor:
     def __init__(self):
-        self.min_normal=None
-        self.max_normal=None
+        self.min_normal=0
+        self.max_normal=0
         self.error_sentinel=None
+        self.unit=''
     
     def read_analog_sensor(self):
         return None
