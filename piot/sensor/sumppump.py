@@ -9,7 +9,7 @@ class SumpPump(BaseAnalogSensor):
         self.unit='cm'
         self.error_sentinel=None
     
-    def read_analog_sensor():
+    def read_analog_sensor(self):
         trig=GPIO(23, 'out')
         echo=GPIO(24, 'in')
 
