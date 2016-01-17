@@ -1,6 +1,6 @@
 from piot.model import AnalogSensorReading, DigitalSensorReading, \
     SensorReading
-from piot.service import SensorReadingService
+from piot.service import SensorReadingService, transaction_scope
 from tests.fixtures import sqlalchemy
 
 
@@ -98,3 +98,18 @@ class TestSensorReadingService:
         service.create(digital)
 
         assert len(service.all()) == 3
+
+
+class TestTransactionScope:
+    def test_rollback(self, sqlalchemy):
+        try:
+            with transaction_scope() as session:
+                reading = SensorReading()
+                session.add(reading)
+
+                raise ValueError('Test Transactions!')
+        except ValueError:
+            pass
+
+        service = SensorReadingService()
+        assert len(service.all()) == 0
