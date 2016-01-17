@@ -1,5 +1,6 @@
-from piot.model import AnalogSensorReading, DigitalSensorReading, \
-    SensorReading
+from piot.model import AnalogSensorReading
+from piot.model import DigitalSensorReading
+from piot.model import SensorReading
 from piot.service import SensorReadingService, transaction_scope
 from tests.fixtures import sqlalchemy
 
