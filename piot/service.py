@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from piot import config
-from piot.model import SensorReading
-from sqlalchemy import create_engine
+from piot.model import NotificationEvent, SensorReading
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 
 engine = create_engine(config.sql_alchemy_connection_string)
@@ -43,7 +43,7 @@ class BaseSQLAlchemyService:
         :rtype model: piot.model.Base
         """
         with transaction_scope() as session:
-            records = session.query(self._model).all()
+            records = session.query(self._model).with_polymorphic('*').all()
 
         return records
     
@@ -53,7 +53,8 @@ class BaseSQLAlchemyService:
         :return: Record specified by the id.
         """
         with transaction_scope() as session:
-            record = session.query(self._model).filter_by(id=key).first()
+            record = session.query(self._model).with_polymorphic('*') \
+                .filter_by(id=key).first()
 
         return record
 
@@ -68,6 +69,18 @@ class BaseSQLAlchemyService:
     def delete(self, object):
         with transaction_scope() as session:
             session.delete(object)
+
+
+class NotificationEventService(BaseSQLAlchemyService):
+    def __init__(self):
+        super().__init__(NotificationEvent)
+
+    def get_newest_notification(self):
+        with transaction_scope() as session:
+            record = session.query(self._model).order_by(
+                    desc(self._model.timestamp)).first()
+
+        return record
 
 
 class SensorReadingService(BaseSQLAlchemyService):

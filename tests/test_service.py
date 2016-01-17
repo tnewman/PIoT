@@ -1,7 +1,11 @@
+from datetime import datetime
 from piot.model import AnalogSensorReading
 from piot.model import DigitalSensorReading
+from piot.model import NotificationEvent
 from piot.model import SensorReading
-from piot.service import SensorReadingService, transaction_scope
+from piot.service import NotificationEventService
+from piot.service import SensorReadingService
+from piot.service import transaction_scope
 from tests.fixtures import sqlalchemy
 
 
@@ -60,6 +64,24 @@ class TestBaseSQLAlchemyService:
         service.delete(reading)
 
         assert len(service.all()) == 0
+
+
+class TestNotificationEvent:
+    def test_get_newest_notification(self):
+        old_notification = NotificationEvent()
+        old_notification.timestamp = datetime(2015, 1, 1)
+
+        new_notification = NotificationEvent()
+        new_notification.timestamp = datetime(2016, 1, 1)
+
+        service = NotificationEventService()
+
+        # Insert in reverse order to confirm order by
+        service.create(new_notification)
+        service.create(old_notification)
+
+        assert service.get_newest_notification().timestamp == \
+               new_notification.timestamp
 
 
 class TestSensorReadingService:
