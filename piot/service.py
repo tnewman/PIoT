@@ -1,9 +1,11 @@
 from contextlib import contextmanager
+from piot import config
 from piot.model import SensorReading
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('sqlite:///:memory:')
+engine = create_engine(config.sql_alchemy_connection_string)
+
 
 @contextmanager
 def transaction_scope():
