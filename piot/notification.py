@@ -3,16 +3,17 @@ from twilio.rest import TwilioRestClient
 
 
 class BaseNotification:
-    def send_notification(message):
+    def send_notification(self, message):
         pass
 
 
 class TwilioSMSNotification(BaseNotification):
+    def __init__(self, twilio_client=TwilioRestClient):
+        self.twilio_client = twilio_client(config.twilio_account,
+                                           config.twilio_token)
+
     def send_notification(self, message):
-        client=TwilioRestClient(config.twilio_account, 
-                                config.twilio_token)
-        
-        message=client.messages.create(
+        message = self.twilio_client.messages.create(
             body=message,
             to=config.twilio_sender_number,
             from_=config.twilio_recipient_number

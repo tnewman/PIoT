@@ -5,7 +5,6 @@ from sqlalchemy import create_engine
 
 sqlalchemyengine = create_engine('sqlite:///:memory:')
 
-
 @pytest.fixture()
 def sqlalchemy():
     # SQLAlchemy recommends a single engine is used across an application
