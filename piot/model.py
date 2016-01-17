@@ -18,10 +18,6 @@ class SensorReading(Base):
         'polymorphic_on': sensor_type
     }
 
-    def __repr__(self):
-        return 'SensorReading(name=\'%s\', value=\'%s\', unit=\'%s\')' \
-            % (self.name, self.value, self.unit)
-
 
 class AnalogSensorReading(SensorReading):
     __tablename__ = 'analogsensorreading'
