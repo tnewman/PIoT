@@ -13,6 +13,7 @@ setup(
     ],
     install_requires=[
         'python-periphery',
+        'schedule',
         'sqlalchemy',
         'twilio',
     ],
