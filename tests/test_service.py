@@ -3,15 +3,15 @@ from piot.model import AnalogSensorReading
 from piot.model import DigitalSensorReading
 from piot.model import NotificationEvent
 from piot.model import SensorReading
-from piot.service import NotificationEventService
-from piot.service import SensorReadingService
+from piot.service import NotificationPersistenceService
+from piot.service import SensorReadingPersistenceService
 from piot.service import transaction_scope
 from tests.fixtures import sqlalchemy
 
 
 class TestBaseSQLAlchemyService:
     def test_all_returns_all_model_objects(self, sqlalchemy):
-        service = SensorReadingService()
+        service = SensorReadingPersistenceService()
 
         reading = AnalogSensorReading()
         service.create(reading)
@@ -22,7 +22,7 @@ class TestBaseSQLAlchemyService:
         assert len(service.all()) == 2
 
     def test_get_returns_single_model_object(self, sqlalchemy):
-        service = SensorReadingService()
+        service = SensorReadingPersistenceService()
 
         reading = AnalogSensorReading()
         service.create(reading)
@@ -33,7 +33,7 @@ class TestBaseSQLAlchemyService:
         assert service.get(reading.id).id == reading.id
 
     def test_update_updates_single_model_object(self, sqlalchemy):
-        service = SensorReadingService()
+        service = SensorReadingPersistenceService()
 
         original_reading = AnalogSensorReading()
         original_reading.name = 'original'
@@ -57,7 +57,7 @@ class TestBaseSQLAlchemyService:
         assert updated_reading.unit == 'new'
 
     def test_delete_deletes_single_model_object(self, sqlalchemy):
-        service = SensorReadingService()
+        service = SensorReadingPersistenceService()
 
         reading = AnalogSensorReading()
         service.create(reading)
@@ -74,7 +74,7 @@ class TestNotificationEvent:
         new_notification = NotificationEvent()
         new_notification.timestamp = datetime(2016, 1, 1)
 
-        service = NotificationEventService()
+        service = NotificationPersistenceService()
 
         # Insert in reverse order to confirm order by
         service.create(new_notification)
@@ -86,7 +86,7 @@ class TestNotificationEvent:
 
 class TestSensorReadingService:
     def test_sensor_reading(self, sqlalchemy):
-        service = SensorReadingService()
+        service = SensorReadingPersistenceService()
 
         reading = SensorReading()
         service.create(reading)
@@ -94,7 +94,7 @@ class TestSensorReadingService:
         assert service.get(reading.id).id == reading.id
 
     def test_analog_sensor_reading(self, sqlalchemy):
-        service = SensorReadingService()
+        service = SensorReadingPersistenceService()
 
         reading = AnalogSensorReading()
         service.create(reading)
@@ -102,7 +102,7 @@ class TestSensorReadingService:
         assert service.get(reading.id).id == reading.id
 
     def test_digital_sensor_reading(self, sqlalchemy):
-        service = SensorReadingService()
+        service = SensorReadingPersistenceService()
 
         reading = DigitalSensorReading()
         service.create(reading)
@@ -110,7 +110,7 @@ class TestSensorReadingService:
         assert service.get(reading.id).id == reading.id
 
     def test_polymorphic(self, sqlalchemy):
-        service = SensorReadingService()
+        service = SensorReadingPersistenceService()
 
         reading = SensorReading()
         analog = AnalogSensorReading()
@@ -134,5 +134,5 @@ class TestTransactionScope:
         except ValueError:
             pass
 
-        service = SensorReadingService()
+        service = SensorReadingPersistenceService()
         assert len(service.all()) == 0

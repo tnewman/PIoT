@@ -51,6 +51,7 @@ class BaseSQLAlchemyService:
         """ Retrieves a specific record.
         :param key: Primary Key of record to retrieve.
         :return: Record specified by the id.
+        :rtype model: piot.model.Base
         """
         with transaction_scope() as session:
             record = session.query(self._model).with_polymorphic('*') \
@@ -71,7 +72,7 @@ class BaseSQLAlchemyService:
             session.delete(object)
 
 
-class NotificationEventService(BaseSQLAlchemyService):
+class NotificationPersistenceService(BaseSQLAlchemyService):
     def __init__(self):
         super().__init__(NotificationEvent)
 
@@ -83,6 +84,6 @@ class NotificationEventService(BaseSQLAlchemyService):
         return record
 
 
-class SensorReadingService(BaseSQLAlchemyService):
+class SensorReadingPersistenceService(BaseSQLAlchemyService):
     def __init__(self):
         super().__init__(SensorReading)
