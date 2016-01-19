@@ -126,31 +126,33 @@ class SensorReadingSchedulingService:
     def _read_analog_sensor(self, analog_sensor):
         value = analog_sensor.read_analog_sensor()
 
-        if value != analog_sensor.error_sentinel:
-            if value < analog_sensor.min_normal or \
-                    value > analog_sensor.max_normal:
-                self._send_notification(analog_sensor)
-
         analog_reading = AnalogSensorReading()
         analog_reading.name = analog_sensor.sensor_name
         analog_reading.value = value
         analog_reading.unit = analog_sensor.unit
         self.sensor_persistence.create(analog_reading)
+        
+        if value != analog_sensor.error_sentinel:
+            if value < analog_sensor.min_normal or \
+                    value > analog_sensor.max_normal:
+                self._send_notification(
+                    analog_sensor, analog_reading)
 
     def _read_digital_sensor(self, digital_sensor):
         value = digital_sensor.read_digital_sensor()
 
-        if value != digital_sensor.normal_value:
-            self._send_notification(digital_sensor)
-
         digital_reading = DigitalSensorReading()
         digital_reading.name = digital_sensor.sensor_name
         digital_sensor.value = value
-        self.sensor_persistence.create(digital_sensor)
+        self.sensor_persistence.create(
+            digital_sensor, digital_reading)
+        
+        if value != digital_sensor.normal_value:
+            self._send_notification(digital_sensor, 
+                digital_reading)
 
     def _send_notification(self, notification_sensor, reading):
-        self.sms_notification.send_notification(
-                notification_sensor.notification_text)
+        self.sms_notification.send_notification('test')
 
         notification_event = NotificationEvent()
         notification_event.sensor_id = reading.id

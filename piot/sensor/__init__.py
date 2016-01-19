@@ -12,8 +12,8 @@ for module in pkgutil.iter_modules([plugin_directory]):
 
 
 def get_all_sensor_classes():
-    return BaseSensor.__subclasses__()
-
+    return get_analog_sensor_classes() + \
+        get_digital_sensor_classes()
 
 def get_analog_sensor_classes():
     return BaseAnalogSensor.__subclasses__()
