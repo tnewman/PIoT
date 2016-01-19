@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+from datetime import datetime
 
 import schedule, time
 from sqlalchemy import create_engine, desc
@@ -130,6 +131,7 @@ class SensorReadingSchedulingService:
         analog_reading.name = analog_sensor.sensor_name
         analog_reading.value = value
         analog_reading.unit = analog_sensor.unit
+        analog_reading.timestamp = datetime.now()
         self.sensor_persistence.create(analog_reading)
         
         if value != analog_sensor.error_sentinel:
@@ -143,10 +145,11 @@ class SensorReadingSchedulingService:
 
         digital_reading = DigitalSensorReading()
         digital_reading.name = digital_sensor.sensor_name
-        digital_sensor.value = value
+        digital_reading.value = value
+        digital_reading.timestamp = datetime.now()
         self.sensor_persistence.create(
             digital_sensor, digital_reading)
-        
+
         if value != digital_sensor.normal_value:
             self._send_notification(digital_sensor, 
                 digital_reading)
