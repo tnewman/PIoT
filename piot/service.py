@@ -101,7 +101,7 @@ class SensorReadingSchedulingService:
         self.sensor = sensor
         self.sensor_persistence = SensorReadingPersistenceService()
         self.notification_persistence = NotificationPersistenceService()
-        self.sms_notification = sms_notification
+        self.sms_notification = sms_notification()
         self.run_continuously = True
         self.time = time
 
@@ -152,7 +152,8 @@ class SensorReadingSchedulingService:
                 digital_reading)
 
     def _send_notification(self, notification_sensor, reading):
-        self.sms_notification.send_notification('test')
+        self.sms_notification.send_notification(
+            notification_sensor.notification_text)
 
         notification_event = NotificationEvent()
         notification_event.sensor_id = reading.id
