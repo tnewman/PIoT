@@ -15,17 +15,13 @@ class SensorReading(Base):
     
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    sensortype = Column(String)
+    sensor_type = Column(String)
     timestamp = Column(DateTime)
 
     __mapper_args__ = {
         'polymorphic_identity': 'employee',
-        'polymorphic_on': sensortype
+        'polymorphic_on': sensor_type
     }
-
-    def __repr__(self):
-        return 'SensorReading(name=\'%s\', value=\'%s\', unit=\'%s\')' \
-            % (self.name, self.value, self.unit)
 
 
 class AnalogSensorReading(SensorReading):
@@ -55,4 +51,5 @@ class NotificationEvent(Base):
     __tablename__ = 'notificationevent'
 
     id = Column(Integer, primary_key=True)
+    sensor_id = Column(Integer, ForeignKey('sensorreading.id'))
     timestamp = Column(DateTime)

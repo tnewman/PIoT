@@ -2,12 +2,16 @@ import time
 from periphery import GPIO
 from piot.sensor.base import BaseAnalogSensor
 
+
 class SumpPump(BaseAnalogSensor):
     def __init__(self):
-        self.min_normal=30
-        self.max_normal=200
-        self.unit='cm'
-        self.error_sentinel=None
+        self.sensor_name = 'Sump Pump Monitor'
+        self.notification_text = 'Sump Pump Monitor - High Water Level - ' + \
+            'Please check the sump pump.'
+        self.min_normal = 30
+        self.max_normal = 200
+        self.unit = 'cm'
+        self.error_sentinel = None
     
     def read_analog_sensor(self):
         trig=GPIO(23, 'out')
