@@ -14,7 +14,7 @@ sump_pump=SumpPump()
 distance=sump_pump.read_analog_sensor()
 print('Object was {0} {1} away'.format(distance, sump_pump.unit))
 
-if(distance>=30-2 or distance<=30+2):
+if(distance>=30-2 and distance<=30+2):
     print('Test Passed')
     exit(0)
 else:
