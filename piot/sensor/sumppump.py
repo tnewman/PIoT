@@ -9,7 +9,7 @@ class SumpPump(BaseAnalogSensor):
         self.notification_text = 'Sump Pump Monitor - High Water Level - ' + \
             'Please check the sump pump.'
         self.min_normal = 30
-        self.max_normal = 200
+        self.max_normal = 10000
         self.unit = 'cm'
         self.error_sentinel = None
     
