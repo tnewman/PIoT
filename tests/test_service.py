@@ -66,7 +66,7 @@ class TestBaseSQLAlchemyService:
         assert len(service.all()) == 0
 
 
-class TestNotificationEvent:
+class TestNotificationPersistenceService:
     def test_get_newest_notification(self):
         old_notification = NotificationEvent()
         old_notification.timestamp = datetime(2015, 1, 1)
@@ -84,7 +84,7 @@ class TestNotificationEvent:
                new_notification.timestamp
 
 
-class TestSensorReadingService:
+class TestSensorReadingPersistenceService:
     def test_sensor_reading(self, sqlalchemy):
         service = SensorReadingPersistenceService()
 

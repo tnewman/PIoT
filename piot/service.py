@@ -103,14 +103,13 @@ class SensorReadingSchedulingService:
         self.sensor_persistence = SensorReadingPersistenceService()
         self.notification_persistence = NotificationPersistenceService()
         self.sms_notification = sms_notification()
-        self.run_continuously = True
         self.time = time
 
     def run_jobs(self):
         self.scheduler.every(30).seconds.do(self._sensor_reading_job)
         self._sensor_reading_job()
 
-        while self.run_continuously:
+        while True:
             self.scheduler.run_pending()
             time.sleep(1)
 
