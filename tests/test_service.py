@@ -70,11 +70,19 @@ class TestBaseSQLAlchemyService:
 
 
 class TestNotificationPersistenceService:
-    def test_get_newest_notification(self):
+    def test_get_newest_notification_returns_newest_record(self, sqlalchemy):
+        sensor_service = SensorReadingPersistenceService()
+
+        reading = AnalogSensorReading()
+        reading.name = 'Test Sensor'
+        sensor_service.create(reading)
+
         old_notification = NotificationEvent()
+        old_notification.sensor_id = reading.id
         old_notification.timestamp = datetime(2015, 1, 1)
 
         new_notification = NotificationEvent()
+        new_notification.sensor_id = reading.id
         new_notification.timestamp = datetime(2016, 1, 1)
 
         service = NotificationPersistenceService()
@@ -83,9 +91,35 @@ class TestNotificationPersistenceService:
         service.create(new_notification)
         service.create(old_notification)
 
-        assert service.get_newest_notification().timestamp == \
-               new_notification.timestamp
+        newest_timestamp = new_notification.timestamp
+        db_timestamp = service.get_newest_notification(reading.name).timestamp
 
+        assert db_timestamp == newest_timestamp
+
+    def test_get_newest_notification_excludes_other_sensors(self, sqlalchemy):
+        reading_service = SensorReadingPersistenceService()
+        notification_service = NotificationPersistenceService()
+
+        included_sensor = DigitalSensorReading()
+        included_sensor.name = 'included'
+        reading_service.create(included_sensor)
+
+        excluded_sensor = DigitalSensorReading()
+        excluded_sensor.name = 'excluded'
+        reading_service.create(excluded_sensor)
+
+        excluded_notification = NotificationEvent()
+        excluded_notification.sensor_id = excluded_sensor.id
+        excluded_notification.timestamp = datetime(2016, 1, 1)
+        notification_service.create(excluded_notification)
+
+        included_notification = NotificationEvent()
+        included_notification.sensor_id = included_sensor.id
+        included_notification.timestamp = datetime(2015, 1, 1)
+        notification_service.create(included_notification)
+
+        assert notification_service.get_newest_notification('included') \
+            .timestamp == included_notification.timestamp
 
 class TestSensorReadingPersistenceService:
     def test_sensor_reading(self, sqlalchemy):

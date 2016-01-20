@@ -82,12 +82,15 @@ class NotificationPersistenceService(BaseSQLAlchemyService):
     def __init__(self):
         super().__init__(NotificationEvent)
 
-    def get_newest_notification(self):
+    def get_newest_notification(self, sensor_name):
         with transaction_scope() as session:
-            record = session.query(self._model).order_by(
-                    desc(self._model.timestamp)).first()
+            notification, reading = session.query(
+                    NotificationEvent, SensorReading) \
+                    .filter(SensorReading.id == NotificationEvent.sensor_id) \
+                    .filter(SensorReading.name == sensor_name) \
+                    .order_by(desc(NotificationEvent.timestamp)).first()
 
-        return record
+        return notification
 
 
 class SensorReadingPersistenceService(BaseSQLAlchemyService):
