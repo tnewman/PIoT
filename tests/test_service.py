@@ -3,10 +3,13 @@ from piot.model import AnalogSensorReading
 from piot.model import DigitalSensorReading
 from piot.model import NotificationEvent
 from piot.model import SensorReading
+from piot.sensor.base import BaseAnalogSensor, BaseDigitalSensor
 from piot.service import NotificationPersistenceService
 from piot.service import SensorReadingPersistenceService
 from piot.service import transaction_scope
-from tests.fixtures import sqlalchemy
+from tests.fixtures import sensormodule, sqlalchemy
+from tests import mocks
+from unittest.mock import MagicMock
 
 
 class TestBaseSQLAlchemyService:
@@ -121,6 +124,82 @@ class TestSensorReadingPersistenceService:
         service.create(digital)
 
         assert len(service.all()) == 3
+
+
+class TestSensorReadingSchedulingService:
+    def test_sensor_reading_job_analog_below_normal(self, sensormodule,
+                                                    sqlalchemy):
+        sensormodule.sensor.sensors = [mocks.MockAnalogBelowNormalSensor]
+
+        sensormodule._sensor_reading_job()
+
+        sensor_persistence = SensorReadingPersistenceService()
+        sensor = sensor_persistence.all()[0]
+
+        assert sensor.name == 'analog below normal'
+        assert sensor.value == 0
+        assert sensor.unit == 'below normal analog unit'
+
+    def test_sensor_reading_job_analog_normal(self, sensormodule, sqlalchemy):
+        sensormodule.sensor.sensors = [mocks.MockAnalogNormalSensor]
+
+        sensormodule._sensor_reading_job()
+
+        sensor_persistence = SensorReadingPersistenceService()
+        sensor = sensor_persistence.all()[0]
+
+        assert sensor.name == 'analog normal'
+        assert sensor.value == 1
+        assert sensor.unit == 'normal analog unit'
+
+    def test_sensor_reading_job_analog_above_normal(self, sensormodule,
+                                                    sqlalchemy):
+        sensormodule.sensor.sensors = [mocks.MockAnalogAboveNormalSensor]
+
+        sensormodule._sensor_reading_job()
+
+        sensor_persistence = SensorReadingPersistenceService()
+        sensor = sensor_persistence.all()[0]
+
+        assert sensor.name == 'analog above normal'
+        assert sensor.value == 2
+        assert sensor.unit == 'above normal analog unit'
+
+    def test_sensor_reading_job_analog_sentinel(self, sensormodule, sqlalchemy):
+        sensormodule.sensor.sensors = [mocks.MockAnalogSentinelSensor]
+
+        sensormodule._sensor_reading_job()
+
+        sensor_persistence = SensorReadingPersistenceService()
+        sensor = sensor_persistence.all()[0]
+
+        assert sensor.name == 'analog sentinel'
+        assert sensor.value == 3
+        assert sensor.unit == 'analog sentinel unit'
+
+    def test_sensor_reading_job_digital_normal(self, sensormodule,
+                                               sqlalchemy):
+        sensormodule.sensor.sensors = [mocks.MockDigitalNormalSensor]
+
+        sensormodule._sensor_reading_job()
+
+        sensor_persistence = SensorReadingPersistenceService()
+        sensor = sensor_persistence.all()[0]
+
+        assert sensor.name == 'digital normal'
+        assert sensor.value is False
+
+    def test_sensor_reading_job_digital_abnormal(self, sensormodule,
+                                                 sqlalchemy):
+        sensormodule.sensor.sensors = [mocks.MockDigitalAbnormalSensor]
+
+        sensormodule._sensor_reading_job()
+
+        sensor_persistence = SensorReadingPersistenceService()
+        sensor = sensor_persistence.all()[0]
+
+        assert sensor.name == 'digital abnormal'
+        assert sensor.value is True
 
 
 class TestTransactionScope:

@@ -96,32 +96,27 @@ class SensorReadingPersistenceService(BaseSQLAlchemyService):
 
 
 class SensorReadingSchedulingService:
-    def __init__(self, schedule=schedule, sensor=sensor,
-                 sms_notification=TwilioSMSNotification, time=time):
-        self.schedule = schedule
-        self.sensor = sensor
+    def __init__(self, sensor_class=sensor,
+                 sms_notification=TwilioSMSNotification):
+        self.sensor = sensor_class()
         self.sensor_persistence = SensorReadingPersistenceService()
         self.notification_persistence = NotificationPersistenceService()
         self.sms_notification = sms_notification()
-        self.time = time
 
     def run_jobs(self):
-        self.scheduler.every(30).seconds.do(self._sensor_reading_job)
+        schedule.every(30).seconds.do(self._sensor_reading_job)
         self._sensor_reading_job()
 
         while True:
-            self.scheduler.run_pending()
+            schedule.run_pending()
             time.sleep(1)
 
     def _sensor_reading_job(self):
-        for sensor_class in sensor.get_all_sensor_classes():
-            if sensor_class is BaseAnalogSensor:
+        for sensor_class in self.sensor.get_all_sensor_classes():
+            if issubclass(sensor_class, BaseAnalogSensor):
                 self._read_analog_sensor(sensor_class())
-            elif sensor_class is BaseDigitalSensor:
+            elif issubclass(sensor_class, BaseDigitalSensor):
                 self._read_digital_sensor(sensor_class())
-            else:
-                # Not sure what to do in the default case
-                pass
 
     def _read_analog_sensor(self, analog_sensor):
         value = analog_sensor.read_analog_sensor()
@@ -146,8 +141,7 @@ class SensorReadingSchedulingService:
         digital_reading.name = digital_sensor.sensor_name
         digital_reading.value = value
         digital_reading.timestamp = datetime.now()
-        self.sensor_persistence.create(
-            digital_sensor, digital_reading)
+        self.sensor_persistence.create(digital_reading)
 
         if value != digital_sensor.normal_value:
             self._send_notification(digital_sensor, 

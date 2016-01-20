@@ -4,7 +4,7 @@ class BaseSensor:
         self.notification_text = ''
 
 
-class BaseAnalogSensor:
+class BaseAnalogSensor(BaseSensor):
     def __init__(self):
         self.min_normal = 0
         self.max_normal = 0
@@ -15,7 +15,7 @@ class BaseAnalogSensor:
         return None
 
 
-class BaseDigitalSensor:
+class BaseDigitalSensor(BaseSensor):
     def __init__(self):
         self.normal_value = False
     
