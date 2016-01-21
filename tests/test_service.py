@@ -121,6 +121,7 @@ class TestNotificationPersistenceService:
         assert notification_service.get_newest_notification('included') \
             .timestamp == included_notification.timestamp
 
+
 class TestSensorReadingPersistenceService:
     def test_sensor_reading(self, sqlalchemy):
         service = SensorReadingPersistenceService()
@@ -174,6 +175,9 @@ class TestSensorReadingSchedulingService:
         assert sensor.value == 0
         assert sensor.unit == 'below normal analog unit'
 
+        sensormodule.sms_notification.send_notification.assert_called_with(
+                'analog below normal notification')
+
     def test_sensor_reading_job_analog_normal(self, sensormodule, sqlalchemy):
         sensormodule.sensor.sensors = [mocks.MockAnalogNormalSensor]
 
@@ -185,6 +189,8 @@ class TestSensorReadingSchedulingService:
         assert sensor.name == 'analog normal'
         assert sensor.value == 1
         assert sensor.unit == 'normal analog unit'
+
+        assert not sensormodule.sms_notification.send_notification.called
 
     def test_sensor_reading_job_analog_above_normal(self, sensormodule,
                                                     sqlalchemy):
@@ -199,7 +205,11 @@ class TestSensorReadingSchedulingService:
         assert sensor.value == 2
         assert sensor.unit == 'above normal analog unit'
 
-    def test_sensor_reading_job_analog_sentinel(self, sensormodule, sqlalchemy):
+        sensormodule.sms_notification.send_notification.assert_called_with(
+                'analog above normal notification')
+
+    def test_sensor_reading_job_analog_sentinel(self, sensormodule,
+                                                sqlalchemy):
         sensormodule.sensor.sensors = [mocks.MockAnalogSentinelSensor]
 
         sensormodule._sensor_reading_job()
@@ -210,6 +220,8 @@ class TestSensorReadingSchedulingService:
         assert sensor.name == 'analog sentinel'
         assert sensor.value == 3
         assert sensor.unit == 'analog sentinel unit'
+
+        assert not sensormodule.sms_notification.send_notification.called
 
     def test_sensor_reading_job_digital_normal(self, sensormodule,
                                                sqlalchemy):
@@ -223,6 +235,8 @@ class TestSensorReadingSchedulingService:
         assert sensor.name == 'digital normal'
         assert sensor.value is False
 
+        assert not sensormodule.sms_notification.send_notification.called
+
     def test_sensor_reading_job_digital_abnormal(self, sensormodule,
                                                  sqlalchemy):
         sensormodule.sensor.sensors = [mocks.MockDigitalAbnormalSensor]
@@ -234,6 +248,9 @@ class TestSensorReadingSchedulingService:
 
         assert sensor.name == 'digital abnormal'
         assert sensor.value is True
+
+        sensormodule.sms_notification.send_notification.assert_called_with(
+            'digital abnormal notification')
 
 
 class TestTransactionScope:

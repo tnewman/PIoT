@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import schedule, time
 from sqlalchemy import create_engine, desc
@@ -84,13 +84,17 @@ class NotificationPersistenceService(BaseSQLAlchemyService):
 
     def get_newest_notification(self, sensor_name):
         with transaction_scope() as session:
-            notification, reading = session.query(
+            result = session.query(
                     NotificationEvent, SensorReading) \
                     .filter(SensorReading.id == NotificationEvent.sensor_id) \
                     .filter(SensorReading.name == sensor_name) \
                     .order_by(desc(NotificationEvent.timestamp)).first()
 
-        return notification
+        if result:
+            notification, reading = result
+            return notification
+        else:
+            return None
 
 
 class SensorReadingPersistenceService(BaseSQLAlchemyService):
@@ -154,6 +158,11 @@ class SensorReadingSchedulingService:
         self.sms_notification.send_notification(
             notification_sensor.notification_text)
 
-        notification_event = NotificationEvent()
-        notification_event.sensor_id = reading.id
-        self.notification_persistence.create(notification_event)
+        last_notification = self.notification_persistence \
+            .get_newest_notification(reading.name)
+
+        if last_notification is None or reading.timestamp > \
+           last_notification.timestamp + timedelta(days=1):
+            notification_event = NotificationEvent()
+            notification_event.sensor_id = reading.id
+            self.notification_persistence.create(notification_event)
