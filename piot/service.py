@@ -5,7 +5,8 @@ import logging, schedule, time
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 
-from piot import config, sensor
+from piot import config
+from piot.sensor import SensorClasses
 from piot.sensor.base import BaseAnalogSensor, BaseDigitalSensor
 from piot.model import NotificationEvent, AnalogSensorReading, DigitalSensorReading, SensorReading
 from piot.notification import TwilioSMSNotification
@@ -105,9 +106,9 @@ class SensorReadingPersistenceService(BaseSQLAlchemyService):
 
 
 class SensorReadingSchedulingService:
-    def __init__(self, sensor_class=sensor,
+    def __init__(self, sensor_class=SensorClasses,
                  sms_notification=TwilioSMSNotification):
-        self.sensor = sensor_class()
+        self.sensor_class = sensor_class()
         self.sensor_persistence = SensorReadingPersistenceService()
         self.notification_persistence = NotificationPersistenceService()
         self.sms_notification = sms_notification()
@@ -121,7 +122,7 @@ class SensorReadingSchedulingService:
             time.sleep(1)
 
     def _sensor_reading_job(self):
-        for sensor_class in self.sensor.get_all_sensor_classes():
+        for sensor_class in self.sensor_class.get_all_sensor_classes():
             try:
                 if issubclass(sensor_class, BaseAnalogSensor):
                     self._read_analog_sensor(sensor_class())
