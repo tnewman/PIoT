@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 
-import schedule, time
+import logging, schedule, time
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 
@@ -9,6 +9,8 @@ from piot import config, sensor
 from piot.sensor.base import BaseAnalogSensor, BaseDigitalSensor
 from piot.model import NotificationEvent, AnalogSensorReading, DigitalSensorReading, SensorReading
 from piot.notification import TwilioSMSNotification
+
+logger = logging.getLogger(__name__)
 
 engine = create_engine(config.sql_alchemy_connection_string)
 
@@ -120,10 +122,14 @@ class SensorReadingSchedulingService:
 
     def _sensor_reading_job(self):
         for sensor_class in self.sensor.get_all_sensor_classes():
-            if issubclass(sensor_class, BaseAnalogSensor):
-                self._read_analog_sensor(sensor_class())
-            elif issubclass(sensor_class, BaseDigitalSensor):
-                self._read_digital_sensor(sensor_class())
+            try:
+                if issubclass(sensor_class, BaseAnalogSensor):
+                    self._read_analog_sensor(sensor_class())
+                elif issubclass(sensor_class, BaseDigitalSensor):
+                    self._read_digital_sensor(sensor_class())
+            except Exception:
+                logger.exception('Failed to read sensor ' +
+                                 sensor_class.__name__)
 
     def _read_analog_sensor(self, analog_sensor):
         value = analog_sensor.read_analog_sensor()
@@ -134,12 +140,25 @@ class SensorReadingSchedulingService:
         analog_reading.unit = analog_sensor.unit
         analog_reading.timestamp = datetime.now()
         self.sensor_persistence.create(analog_reading)
-        
-        if value != analog_sensor.error_sentinel:
+
+        if value is None:
+            logger.info(analog_reading.name + ' Analog Sensor Value: None')
+        elif value != analog_sensor.error_sentinel:
             if value < analog_sensor.min_normal or \
                     value > analog_sensor.max_normal:
+                logger.info(analog_reading.name + ' Analog Sensor Value: ' +
+                            str(analog_reading.value) + analog_reading.unit +
+                            ' - Out of Normal Range')
                 self._send_notification(
                     analog_sensor, analog_reading)
+            else:
+                logger.info(analog_reading.name + ' Analog Sensor Value: ' +
+                            str(analog_reading.value) + analog_reading.unit +
+                            ' - Within Normal Range')
+        else:
+            logger.info(analog_reading.name + ' Analog Sensor Value: ' +
+                        str(analog_reading.value) + analog_reading.unit +
+                        ' - Error Sentinel - Ignoring')
 
     def _read_digital_sensor(self, digital_sensor):
         value = digital_sensor.read_digital_sensor()
@@ -150,9 +169,18 @@ class SensorReadingSchedulingService:
         digital_reading.timestamp = datetime.now()
         self.sensor_persistence.create(digital_reading)
 
-        if value != digital_sensor.normal_value:
-            self._send_notification(digital_sensor, 
-                digital_reading)
+        if value is None:
+            logger.info(digital_reading.name + ' Digital Sensor Value: None')
+        elif value != digital_sensor.normal_value:
+            logger.info(digital_reading.name + ' Digital Sensor Value: ' +
+                        str(digital_reading.value) +
+                        ' - Out of Normal Range')
+
+            self._send_notification(digital_sensor, digital_reading)
+        else:
+            logger.info(digital_reading.name + ' Digital Sensor Value: ' +
+                        str(digital_reading.value) +
+                        ' - Within Normal Range')
 
     def _send_notification(self, notification_sensor, reading):
         last_notification = self.notification_persistence \
@@ -160,7 +188,8 @@ class SensorReadingSchedulingService:
 
         if last_notification is None:
             send_notification = True
-        elif reading.timestamp > last_notification.timestamp + timedelta(days=1):
+        elif reading.timestamp > last_notification.timestamp + \
+                timedelta(days=1):
             send_notification = True
         else:
             send_notification = False
@@ -172,3 +201,6 @@ class SensorReadingSchedulingService:
             notification_event.sensor_id = reading.id
             notification_event.timestamp = datetime.now()
             self.notification_persistence.create(notification_event)
+            logger.info(reading.name + ' - Sent Notification')
+        else:
+            logger.info(reading.name + ' - No Notification Sent')
