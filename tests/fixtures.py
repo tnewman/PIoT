@@ -18,13 +18,12 @@ def sqlalchemy():
     Base.metadata.drop_all(bind=sqlalchemyengine)
     Base.metadata.create_all(bind=sqlalchemyengine)
 
+mock_sensors = []
+
 
 class MockSensor:
-    def __init__(self):
-        self.sensors = []
-
     def get_all_sensor_classes(self):
-        return self.sensors
+        return mock_sensors
 
 
 @pytest.fixture()

@@ -1,3 +1,4 @@
+import tests.fixtures
 from datetime import datetime
 from piot.model import AnalogSensorReading
 from piot.model import DigitalSensorReading
@@ -164,7 +165,7 @@ class TestSensorReadingPersistenceService:
 class TestSensorReadingSchedulingService:
     def test_sensor_reading_job_analog_below_normal(self, sensormodule,
                                                     sqlalchemy):
-        sensormodule.sensor.sensors = [mocks.MockAnalogBelowNormalSensor]
+        tests.fixtures.mock_sensors = [mocks.MockAnalogBelowNormalSensor]
 
         sensormodule._sensor_reading_job()
 
@@ -179,7 +180,7 @@ class TestSensorReadingSchedulingService:
                 'analog below normal notification')
 
     def test_sensor_reading_job_analog_normal(self, sensormodule, sqlalchemy):
-        sensormodule.sensor.sensors = [mocks.MockAnalogNormalSensor]
+        tests.fixtures.mock_sensors = [mocks.MockAnalogNormalSensor]
 
         sensormodule._sensor_reading_job()
 
@@ -194,7 +195,7 @@ class TestSensorReadingSchedulingService:
 
     def test_sensor_reading_job_analog_above_normal(self, sensormodule,
                                                     sqlalchemy):
-        sensormodule.sensor.sensors = [mocks.MockAnalogAboveNormalSensor]
+        tests.fixtures.mock_sensors = [mocks.MockAnalogAboveNormalSensor]
 
         sensormodule._sensor_reading_job()
 
@@ -210,7 +211,7 @@ class TestSensorReadingSchedulingService:
 
     def test_sensor_reading_job_analog_sentinel(self, sensormodule,
                                                 sqlalchemy):
-        sensormodule.sensor.sensors = [mocks.MockAnalogSentinelSensor]
+        tests.fixtures.mock_sensors = [mocks.MockAnalogSentinelSensor]
 
         sensormodule._sensor_reading_job()
 
@@ -225,7 +226,7 @@ class TestSensorReadingSchedulingService:
 
     def test_sensor_reading_job_digital_normal(self, sensormodule,
                                                sqlalchemy):
-        sensormodule.sensor.sensors = [mocks.MockDigitalNormalSensor]
+        tests.fixtures.mock_sensors = [mocks.MockDigitalNormalSensor]
 
         sensormodule._sensor_reading_job()
 
@@ -239,7 +240,7 @@ class TestSensorReadingSchedulingService:
 
     def test_sensor_reading_job_digital_abnormal(self, sensormodule,
                                                  sqlalchemy):
-        sensormodule.sensor.sensors = [mocks.MockDigitalAbnormalSensor]
+        tests.fixtures.mock_sensors = [mocks.MockDigitalAbnormalSensor]
 
         sensormodule._sensor_reading_job()
 
@@ -254,7 +255,7 @@ class TestSensorReadingSchedulingService:
 
     def test_sensor_reading_job_no_notifications_within_four_hours(
             self, sensormodule, sqlalchemy):
-        sensormodule.sensor.sensors = [mocks.MockDigitalAbnormalSensor]
+        tests.fixtures.mock_sensors = [mocks.MockDigitalAbnormalSensor]
 
         sensormodule._sensor_reading_job()
         sensormodule._sensor_reading_job()
@@ -263,12 +264,9 @@ class TestSensorReadingSchedulingService:
 
         assert len(sensor_persistence.all()) == 1
 
-
-
-
     def test_sensor_reading_job_notifications_after_four_hours(
             self, sensormodule, sqlalchemy):
-        sensormodule.sensor.sensors = [mocks.MockDigitalAbnormalSensor]
+        tests.fixtures.mock_sensors = [mocks.MockDigitalAbnormalSensor]
 
         sensor_persistence = NotificationPersistenceService()
 
