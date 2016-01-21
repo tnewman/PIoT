@@ -155,14 +155,20 @@ class SensorReadingSchedulingService:
                 digital_reading)
 
     def _send_notification(self, notification_sensor, reading):
-        self.sms_notification.send_notification(
-            notification_sensor.notification_text)
-
         last_notification = self.notification_persistence \
             .get_newest_notification(reading.name)
 
-        if last_notification is None or reading.timestamp > \
-           last_notification.timestamp + timedelta(days=1):
+        if last_notification is None:
+            send_notification = True
+        elif reading.timestamp > last_notification.timestamp + timedelta(days=1):
+            send_notification = True
+        else:
+            send_notification = False
+
+        if send_notification:
+            self.sms_notification.send_notification(
+                    notification_sensor.notification_text)
             notification_event = NotificationEvent()
             notification_event.sensor_id = reading.id
+            notification_event.timestamp = datetime.now()
             self.notification_persistence.create(notification_event)

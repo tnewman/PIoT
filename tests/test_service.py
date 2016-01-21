@@ -252,6 +252,37 @@ class TestSensorReadingSchedulingService:
         sensormodule.sms_notification.send_notification.assert_called_with(
             'digital abnormal notification')
 
+    def test_sensor_reading_job_no_notifications_within_four_hours(
+            self, sensormodule, sqlalchemy):
+        sensormodule.sensor.sensors = [mocks.MockDigitalAbnormalSensor]
+
+        sensormodule._sensor_reading_job()
+        sensormodule._sensor_reading_job()
+
+        sensor_persistence = NotificationPersistenceService()
+
+        assert len(sensor_persistence.all()) == 1
+
+
+
+
+    def test_sensor_reading_job_notifications_after_four_hours(
+            self, sensormodule, sqlalchemy):
+        sensormodule.sensor.sensors = [mocks.MockDigitalAbnormalSensor]
+
+        sensor_persistence = NotificationPersistenceService()
+
+        sensormodule._sensor_reading_job()
+
+        notification = sensor_persistence.get_newest_notification(
+            'digital abnormal')
+        notification.timestamp = datetime(1970, 1, 1)
+        sensor_persistence.update(notification)
+
+        sensormodule._sensor_reading_job()
+
+        assert len(sensor_persistence.all()) == 2
+
 
 class TestTransactionScope:
     def test_rollback(self, sqlalchemy):
