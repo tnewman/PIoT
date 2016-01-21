@@ -142,9 +142,7 @@ class SensorReadingSchedulingService:
         analog_reading.timestamp = datetime.now()
         self.sensor_persistence.create(analog_reading)
 
-        if value is None:
-            logger.info(analog_reading.name + ' Analog Sensor Value: None')
-        elif value != analog_sensor.error_sentinel:
+        if value != analog_sensor.error_sentinel:
             if value < analog_sensor.min_normal or \
                     value > analog_sensor.max_normal:
                 logger.info(analog_reading.name + ' Analog Sensor Value: ' +
@@ -170,9 +168,7 @@ class SensorReadingSchedulingService:
         digital_reading.timestamp = datetime.now()
         self.sensor_persistence.create(digital_reading)
 
-        if value is None:
-            logger.info(digital_reading.name + ' Digital Sensor Value: None')
-        elif value != digital_sensor.normal_value:
+        if value != digital_sensor.normal_value:
             logger.info(digital_reading.name + ' Digital Sensor Value: ' +
                         str(digital_reading.value) +
                         ' - Out of Normal Range')
