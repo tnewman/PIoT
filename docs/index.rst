@@ -20,7 +20,6 @@ addition to those that are supported through our kits.
 
 .. figure:: images/distancesensor.jpg
    :alt: PIoT Distance Sensor
-   :scale: 50 %
    
    Raspberry Pi with a distance sensor used to develop the PIoT 
    Software.
