@@ -18,6 +18,12 @@ notifications when a sensor detects that something has gone wrong.
 PIoT has a sensor plugin system, so you can add your own sensors in 
 addition to those that are supported through our kits.
 
+.. figure:: images/distancesensor.jpg
+   :alt: PIoT Distance Sensor
+   
+   Raspberry Pi with a distance sensor used to develop the PIoT 
+   Software.
+
 PIoT Sump Pump Monitor Kit
 --------------------------
 
