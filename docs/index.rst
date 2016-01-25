@@ -13,10 +13,11 @@ The Pi of Things (PIoT) is a learning platform to explore the Internet
 of Things (IoT). The IoT consists of embedded devices that communicate 
 with services on the internet, such as smart thermostats. PIoT is an 
 open source platform that allows you to interact with sensors, view the 
-readings of those sensors over time and receive text message 
-notifications when a sensor detects that something has gone wrong. 
-PIoT has a sensor plugin system, so you can add your own sensors in 
-addition to those that are supported through our kits.
+readings of those sensors over time on a dynamic website that is hosted 
+on the Raspberry Pi and receive text message notifications when a sensor 
+detects that something has gone wrong. PIoT has a sensor plugin system, 
+so you can add your own sensors in addition to those that are supported 
+through our kits.
 
 .. figure:: images/distancesensor.jpg
    :alt: PIoT Distance Sensor
