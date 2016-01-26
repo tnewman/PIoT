@@ -12,6 +12,7 @@ setup(
         'pytest-runner',
     ],
     install_requires=[
+        'flask',
         'python-periphery',
         'schedule',
         'sqlalchemy',
