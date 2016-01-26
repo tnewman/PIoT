@@ -192,12 +192,16 @@ class SensorReadingSchedulingService:
             send_notification = False
 
         if send_notification:
-            self.sms_notification.send_notification(
-                    notification_sensor.notification_text)
-            notification_event = NotificationEvent()
-            notification_event.sensor_id = reading.id
-            notification_event.timestamp = datetime.now()
-            self.notification_persistence.create(notification_event)
-            logger.info(reading.name + ' - Sent Notification')
+            try:
+                self.sms_notification.send_notification(
+                        notification_sensor.notification_text)
+                notification_event = NotificationEvent()
+                notification_event.sensor_id = reading.id
+                notification_event.timestamp = datetime.now()
+                self.notification_persistence.create(notification_event)
+                logger.info(reading.name + ' - Sent Notification')
+            except IOError:
+                logger.exception(
+                        reading.name + ' - Failed to send notification')
         else:
             logger.info(reading.name + ' - No Notification Sent')

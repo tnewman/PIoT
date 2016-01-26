@@ -281,6 +281,14 @@ class TestSensorReadingSchedulingService:
 
         assert len(sensor_persistence.all()) == 2
 
+    def test_sensor_reading_job_handles_io_error(
+            self, sensormodule, sqlalchemy):
+        tests.fixtures.mock_sensors = [mocks.MockDigitalAbnormalSensor]
+
+        sensormodule.sms_notification.send_notification.side_effect = IOError()
+
+        sensormodule._sensor_reading_job()
+
 
 class TestTransactionScope:
     def test_rollback(self, sqlalchemy):
