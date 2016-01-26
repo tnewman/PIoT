@@ -10,7 +10,8 @@ class BaseNotification:
 class TwilioSMSNotification(BaseNotification):
     def __init__(self, twilio_client=TwilioRestClient):
         self.twilio_client = twilio_client(config.twilio_account,
-                                           config.twilio_token)
+                                           config.twilio_token,
+                                           timeout=1)
 
     def send_notification(self, message):
         message = self.twilio_client.messages.create(
