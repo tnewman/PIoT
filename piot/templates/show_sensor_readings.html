@@ -20,13 +20,24 @@
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>test</th>
+                    <th>Sensor</th>
+                    <th>Type</th>
+                    <th>Value</th>
+                    <th>Timestamp</th>
                 </tr>
             </thead>
             <tbody>
                 {% for reading in readings %}
                 <tr>
-                    <td>test</td>
+                    <td>{{ reading.name }}</td>
+                    {% if reading.sensor_type == 'analogsensorreading' %}
+                    <td>Analog</td>
+                    <td>{{ reading.value }} ({{ reading.unit }})
+                    {% else %}
+                    <td>Digital</td>
+                    <td>{{ reading.value }}</td>
+                    {% endif %}
+                    <td>{{ reading.timestamp }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
