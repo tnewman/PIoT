@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 
-import logging, schedule, time
+import logging
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 
@@ -113,15 +113,7 @@ class SensorReadingSchedulingService:
         self.notification_persistence = NotificationPersistenceService()
         self.sms_notification = sms_notification()
 
-    def run_jobs(self):
-        schedule.every(30).seconds.do(self._sensor_reading_job)
-        self._sensor_reading_job()
-
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
-
-    def _sensor_reading_job(self):
+    def sensor_reading_job(self):
         for sensor_class in self.sensor_class.get_all_sensor_classes():
             try:
                 if issubclass(sensor_class, BaseAnalogSensor):
