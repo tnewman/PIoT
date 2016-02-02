@@ -20,6 +20,8 @@ python3 /home/pi/PIoT/setup.py develop
 
 cp /home/pi/PIoT/config.cfg.sample /home/pi/PIoT/config.cfg
 
+/home/pi/PIoT/initializedatabase.py
+
 cp /home/pi/PIoT/piotexportgpio.service /etc/systemd/system/piotexportgpio.service
 cp /home/pi/PIoT/piotreadsensors.service /etc/systemd/system/piotreadsensors.service
 cp /home/pi/PIoT/piotweb.service /etc/systemd/system/piotweb.service
