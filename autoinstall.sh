@@ -16,15 +16,19 @@ git clone https://github.com/tnewman/piot /home/pi/PIoT
 chown -R pi /home/pi/PIoT
 chgrp -R pi /home/pi/PIoT
 
+cd /home/piot/PIoT
+
 python3 /home/pi/PIoT/setup.py develop
 
-cp /home/pi/PIoT/config.cfg.sample /home/pi/PIoT/config.cfg
+pip3 install gunicorn
 
-/home/pi/PIoT/initializedatabase.py
+cp config.cfg.sample config.cfg
 
-cp /home/pi/PIoT/piotexportgpio.service /etc/systemd/system/piotexportgpio.service
-cp /home/pi/PIoT/piotreadsensors.service /etc/systemd/system/piotreadsensors.service
-cp /home/pi/PIoT/piotweb.service /etc/systemd/system/piotweb.service
+./initializedatabase.py
+
+cp piotexportgpio.service /etc/systemd/system/piotexportgpio.service
+cp piotreadsensors.service /etc/systemd/system/piotreadsensors.service
+cp piotweb.service /etc/systemd/system/piotweb.service
 
 systemctl daemon-reload
 
