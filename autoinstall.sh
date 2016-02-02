@@ -36,8 +36,8 @@ systemctl enable piotexportgpio.service
 systemctl enable piotreadsensors.service
 systemctl enable piotweb.service
 
-systemctl start piotexportgpio.service
-systemctl start piotreadsensors.service
-systemctl start piotweb.service
+systemctl restart piotexportgpio.service
+systemctl restart piotreadsensors.service
+systemctl restart piotweb.service
 
 echo "PIoT Successfully Installed!"
