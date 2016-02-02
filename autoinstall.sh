@@ -18,7 +18,7 @@ chgrp -R pi /home/pi/PIoT
 
 cd /home/piot/PIoT
 
-python3 /home/pi/PIoT/setup.py develop
+python3 setup.py develop
 
 pip3 install gunicorn
 
