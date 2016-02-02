@@ -16,7 +16,7 @@ git clone https://github.com/tnewman/piot /home/pi/PIoT
 chown -R pi /home/pi/PIoT
 chgrp -R pi /home/pi/PIoT
 
-cd /home/piot/PIoT
+cd /home/pi/PIoT
 
 python3 setup.py develop
 
