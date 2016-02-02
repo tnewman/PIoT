@@ -13,9 +13,6 @@ sudo apt-get -y install git python3-pip
 
 git clone https://github.com/tnewman/piot /home/pi/PIoT
 
-chown -R pi /home/pi/PIoT
-chgrp -R pi /home/pi/PIoT
-
 cd /home/pi/PIoT
 
 python3 setup.py develop
@@ -39,5 +36,8 @@ systemctl enable piotweb.service
 systemctl restart piotexportgpio.service
 systemctl restart piotreadsensors.service
 systemctl restart piotweb.service
+
+chown -R pi /home/pi/PIoT
+chgrp -R pi /home/pi/PIoT
 
 echo "PIoT Successfully Installed!"
