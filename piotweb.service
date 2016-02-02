@@ -1,0 +1,11 @@
+[Unit]
+Description=PIoT Web Application Service (Gunicorn)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/pi/PIoT/runweb.sh
+WorkingDirectory=/home/pi/PIoT
+
+[Install]
+WantedBy=multi-user.target

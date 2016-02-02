@@ -1,0 +1,12 @@
+[Unit]
+Description=PIoT Sensor Reading Service
+Requires=piotexportgpio.service
+After=network.target piotexportgpio.service
+
+[Service]
+Type=simple
+ExecStart=/home/pi/PIoT/readsensors.py
+WorkingDirectory=/home/pi/PIoT
+
+[Install]
+WantedBy=multi-user.target
