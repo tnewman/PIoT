@@ -1,0 +1,10 @@
+[Unit]
+Description=PIoT GPIO Export
+
+[Service]
+User=pi
+Type=oneshot
+ExecStart=/home/pi/PIoT/exportgpio.sh
+
+[Install]
+WantedBy=multi-user.target
