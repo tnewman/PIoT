@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+""" Reads all sensors configured in the PIoT sensor directory every 30
+    seconds.
+"""
+
 running = True
 
 
@@ -21,12 +25,15 @@ scheduling_service=SensorReadingSchedulingService()
 
 
 def run_jobs():
-        schedule.every(30).seconds.do(scheduling_service.sensor_reading_job)
-        scheduling_service.sensor_reading_job()
+    """ Runs the sensor reading job every 30 seconds.
+    """
 
-        while running:
-            schedule.run_pending()
-            time.sleep(1)
+    schedule.every(30).seconds.do(scheduling_service.sensor_reading_job)
+    scheduling_service.sensor_reading_job()
+
+    while running:
+        schedule.run_pending()
+        time.sleep(1)
 
 if __name__ == '__main__':
     run_jobs()

@@ -1,3 +1,6 @@
+""" PIoT Services
+"""
+
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 
@@ -21,6 +24,7 @@ def transaction_scope():
     """ Wraps SQLAlchemy operations. Commits a session if there are no errors,
         rolls back a session on exception and closes a session in either case.
     """
+
     session_class = sessionmaker(bind=engine, expire_on_commit=False)
     session = session_class()
     
@@ -44,6 +48,7 @@ class BaseSQLAlchemyService:
         :param model: Model Class used by child service.
         :type model: piot.model.Base
         """
+
         self._model = model
     
     def all(self):
@@ -51,6 +56,7 @@ class BaseSQLAlchemyService:
         :return: All records.
         :rtype model: piot.model.Base
         """
+
         with transaction_scope() as session:
             records = session.query(self._model).with_polymorphic('*').all()
 
@@ -59,9 +65,11 @@ class BaseSQLAlchemyService:
     def get(self, key):
         """ Retrieves a specific record.
         :param key: Primary Key of record to retrieve.
+        :type key: int
         :return: Record specified by the id.
         :rtype model: piot.model.Base
         """
+
         with transaction_scope() as session:
             record = session.query(self._model).with_polymorphic('*') \
                 .filter_by(id=key).first()
@@ -69,23 +77,49 @@ class BaseSQLAlchemyService:
         return record
 
     def create(self, object):
+        """ Creates a new record.
+        :param object: The new record.
+        :type object: piot.model.Base
+        """
+
         with transaction_scope() as session:
             session.add(object)
 
     def update(self, object):
+        """ Updates an existing record.
+        :param object: The existing record.
+        :type object: piot.model.Base
+        """
+
         with transaction_scope() as session:
             session.merge(object)
     
     def delete(self, object):
+        """ Deletes an existing record.
+        :param object: The existing record.
+        :type object: piot.model.Base
+        """
+
         with transaction_scope() as session:
             session.delete(object)
 
 
 class NotificationPersistenceService(BaseSQLAlchemyService):
     def __init__(self):
+        """ Provides database CRUD operations for Notifications.
+        """
+
         super().__init__(NotificationEvent)
 
     def get_newest_notification(self, sensor_name):
+        """ Retrieves the newest notification based on timestamp.
+        :param sensor_name: The name of the sensor to retrieve the newest
+                            notification for.
+        :type sensor_name: str
+        :return: Newest Notification
+        :rtype: NotificationEvent
+        """
+
         with transaction_scope() as session:
             result = session.query(
                     NotificationEvent, SensorReading) \
@@ -102,18 +136,35 @@ class NotificationPersistenceService(BaseSQLAlchemyService):
 
 class SensorReadingPersistenceService(BaseSQLAlchemyService):
     def __init__(self):
+        """ Provides database CRUD operations for Sensor Readings.
+        """
+
         super().__init__(SensorReading)
 
 
 class SensorReadingSchedulingService:
     def __init__(self, sensor_class=SensorClasses,
                  sms_notification=TwilioSMSNotification):
+        """ Reads all sensors in the sensor plugin folder, logs the values
+            read from the sensors and sends notifications for abnormal sensor
+            values.
+        :param sensor_class: Provides access to all sensor classes.
+        :type sensor_class: SensorClasses class
+        :param sms_notification: Notification class to use for SMS
+                                 notifications.
+        :type sms_notification: Notification class
+        """
+
         self.sensor_class = sensor_class()
         self.sensor_persistence = SensorReadingPersistenceService()
         self.notification_persistence = NotificationPersistenceService()
         self.sms_notification = sms_notification()
 
     def sensor_reading_job(self):
+        """ Reads all sensors in the plugin folder, logs the values read from
+            the sensors and sends notifications for abnormal sensor values.
+        """
+
         for sensor_class in self.sensor_class.get_all_sensor_classes():
             try:
                 if issubclass(sensor_class, BaseAnalogSensor):

@@ -5,6 +5,9 @@ from piot.sensor.base import BaseAnalogSensor
 
 class SumpPump(BaseAnalogSensor):
     def __init__(self):
+        """ Sump Pump Sensor
+        """
+
         self.sensor_name = 'Sump Pump Monitor'
         self.notification_text = 'Sump Pump Monitor - High Water Level - ' + \
             'Please check the sump pump.'
@@ -14,6 +17,11 @@ class SumpPump(BaseAnalogSensor):
         self.error_sentinel = None
     
     def read_analog_sensor(self):
+        """ Reads the Sump Pump sensor.
+        :return: Distance to Sump Pump water.
+        :rtype: float
+        """
+
         trig=GPIO(23, 'out')
         echo=GPIO(24, 'in')
 
