@@ -61,10 +61,10 @@ Once you have the above parts, you can follow the installation
 instructions to install the PIoT open source software on your 
 Raspberry Pi and configure it to work as a sump pump monitor.
 
-Setup
------
+Raspberry Pi Setup
+------------------
 
-You will need to install `Rasbian Lite`_ Linux distribution 
+You will need to install `Raspbian Lite`_ Linux distribution 
 onto your Raspberry Pi using the `official instructions`_. 
 `Raspbian Lite`_ is recommended because it is lightweight, 
 and PIoT was designed to work on it. Other distributions 
