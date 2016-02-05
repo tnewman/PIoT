@@ -47,7 +47,11 @@ Table of Contents
    self
    bomassembly
    pisetup
-   installation
+   piotsetup
+   piotconfiguration
+   piotwebinterface
+   piotfieldinstallation
+   piotcustomsensors
 
 Indices and tables
 ==================
