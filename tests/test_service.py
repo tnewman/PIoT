@@ -161,6 +161,25 @@ class TestSensorReadingPersistenceService:
 
         assert len(service.all()) == 3
 
+    def test_all_reversed(self, sqlalchemy):
+        service = SensorReadingPersistenceService()
+
+        older = AnalogSensorReading()
+        older.timestamp = datetime.now()
+
+        newer = DigitalSensorReading()
+        newer.timestamp = datetime.now()
+
+        service.create(older)
+        service.create(newer)
+
+        readings = service.all_reversed()
+
+        assert readings[0].timestamp == newer.timestamp
+        assert readings[1].timestamp == older.timestamp
+
+        assert len(readings) == 2
+
 
 class TestSensorReadingSchedulingService:
     def test_sensor_reading_job_analog_below_normal(self, sensormodule,

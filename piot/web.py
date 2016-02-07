@@ -14,6 +14,6 @@ def show_sensor_readings():
     """ Show all recorded sensor readings.
     """
 
-    readings = sensor_reading.all()
+    readings = sensor_reading.all_reversed()
 
     return render_template('show_sensor_readings.html', readings=readings)

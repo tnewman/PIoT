@@ -54,14 +54,14 @@ class BaseSQLAlchemyService:
     def all(self):
         """ Retrieve all records.
         :return: All records.
-        :rtype model: piot.model.Base
+        :rtype: list of piot.model.Base
         """
 
         with transaction_scope() as session:
             records = session.query(self._model).with_polymorphic('*').all()
 
         return records
-    
+
     def get(self, key):
         """ Retrieves a specific record.
         :param key: Primary Key of record to retrieve.
@@ -140,6 +140,18 @@ class SensorReadingPersistenceService(BaseSQLAlchemyService):
         """
 
         super().__init__(SensorReading)
+
+    def all_reversed(self):
+        """ Reads all sensor readings in reverse order by timestamp.
+        :return: All sensor readings in reverse order by timestamp.
+        :rtype: list of piot.model.SensorReading
+        """
+
+        with transaction_scope() as session:
+            readings = session.query(SensorReading).with_polymorphic('*')\
+                .order_by(desc(SensorReading.timestamp)).all()
+
+        return readings
 
 
 class SensorReadingSchedulingService:

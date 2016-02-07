@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from piot import web
 from piot.model import AnalogSensorReading, DigitalSensorReading
@@ -47,3 +48,31 @@ class TestWeb:
         assert b'Digital' in rv.data
         assert b'True' in rv.data
         assert str.encode(str(timestamp)) in rv.data
+
+    def test_index_timestamp_reverse_order(self, sqlalchemy):
+        service = SensorReadingPersistenceService()
+
+        old = DigitalSensorReading()
+        old.name = 'testsensor'
+        old.value = True
+        old.timestamp = datetime.now()
+
+        new = DigitalSensorReading()
+        new.name = 'testsensor'
+        new.value = True
+        new.timestamp = datetime.now()
+
+        service.create(old)
+        service.create(new)
+
+        client = web.app.test_client()
+
+        rv = client.get('/')
+
+        rv_str = rv.data.decode('utf-8')
+
+        matches = re.findall('\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d\d\d\d',
+                             rv_str)
+
+        assert matches[0] == str(new.timestamp)
+        assert matches[1] == str(old.timestamp)
