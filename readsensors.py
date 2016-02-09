@@ -18,8 +18,10 @@ import signal
 signal.signal(signal.SIGTERM, signal_handler)
 signal.signal(signal.SIGINT, signal_handler)
 
-import schedule, time
+import logging, schedule, sys, time
 from piot.service import SensorReadingSchedulingService
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 scheduling_service=SensorReadingSchedulingService()
 

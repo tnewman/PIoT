@@ -38,6 +38,6 @@ class TwilioSMSNotification(BaseNotification):
 
         message = self.twilio_client.messages.create(
             body=message,
-            to=config.twilio_sender_number,
-            from_=config.twilio_recipient_number
+            from_=config.twilio_sender_number,
+            to=config.twilio_recipient_number
         )
