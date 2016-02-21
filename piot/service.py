@@ -267,7 +267,8 @@ class SensorReadingSchedulingService:
         if send_notification:
             try:
                 self.sms_notification.send_notification(
-                        notification_sensor.notification_text)
+                        notification_sensor.get_notification_text(
+                            reading.value))
                 notification_event = NotificationEvent()
                 notification_event.sensor_id = reading.id
                 notification_event.timestamp = datetime.now()

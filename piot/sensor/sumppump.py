@@ -9,13 +9,15 @@ class SumpPump(BaseAnalogSensor):
         """
 
         self.sensor_name = 'Sump Pump Monitor'
-        self.notification_text = 'Sump Pump Monitor - High Water Level - ' + \
-            'Please check the sump pump.'
         self.min_normal = 30
         self.max_normal = 10000
         self.unit = 'cm'
         self.error_sentinel = None
-    
+
+    def get_notification_text(self, sensor_value):
+        return 'Sump Pump Monitor - High Water Level - (' + sensor_value + \
+            + ' ' + self.unit + ') Please check the sump pump.'
+
     def read_analog_sensor(self):
         """ Reads the Sump Pump sensor.
         :return: Distance to Sump Pump water.

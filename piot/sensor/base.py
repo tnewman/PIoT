@@ -10,9 +10,14 @@ class BaseSensor:
         self.sensor_name = ''
         """The name of the sensor. """
 
-        self.notification_text = ''
-        """ The text that is included with notifications that are sent when
-            sensor readings are abnormal. """
+    def get_notification_text(self, sensor_value):
+        """ Get the notification text for the sensor.
+        :param sensor_value: The sensor value to send in the notification.
+        :type sensor_value: float for Analog Sensors/bool for Digital
+                            Sensors
+        :return:
+        """
+        return ''
 
 
 class BaseAnalogSensor(BaseSensor):

@@ -7,7 +7,9 @@ class MockAnalogBelowNormalSensor(BaseAnalogSensor):
         self.max_normal = 2
         self.error_sentinel= 3
         self.unit = 'below normal analog unit'
-        self.notification_text = 'analog below normal notification'
+
+    def get_notification_text(self, sensor_value):
+        return'analog below normal notification'
 
     def read_analog_sensor(self):
         return 0
@@ -20,7 +22,9 @@ class MockAnalogNormalSensor(BaseAnalogSensor):
         self.max_normal = 2
         self.error_sentinel= 3
         self.unit = 'normal analog unit'
-        self.notification_text = 'analog normal notification'
+
+    def get_notification_text(self, sensor_value):
+        return 'analog normal notification'
 
     def read_analog_sensor(self):
         return 1
@@ -33,7 +37,9 @@ class MockAnalogAboveNormalSensor(BaseAnalogSensor):
         self.max_normal = 1
         self.error_sentinel= 3
         self.unit = 'above normal analog unit'
-        self.notification_text = 'analog above normal notification'
+
+    def get_notification_text(self, sensor_value):
+        return 'analog above normal notification'
 
     def read_analog_sensor(self):
         return 2
@@ -46,7 +52,9 @@ class MockAnalogSentinelSensor(BaseAnalogSensor):
         self.max_normal = 1
         self.error_sentinel = 3
         self.unit = 'analog sentinel unit'
-        self.notification_text = 'analog sentinel notification'
+
+    def get_notification_text(self, sensor_value):
+        return'analog sentinel notification'
 
     def read_analog_sensor(self):
         return 3
@@ -56,7 +64,9 @@ class MockDigitalNormalSensor(BaseDigitalSensor):
     def __init__(self):
         self.sensor_name = 'digital normal'
         self.normal_value = False
-        self.notification_text = 'digital normal notification'
+
+    def get_notification_text(self, sensor_value):
+        return'digital normal notification'
 
     def read_digital_sensor(self):
         return False
@@ -66,7 +76,9 @@ class MockDigitalAbnormalSensor(BaseDigitalSensor):
     def __init__(self):
         self.sensor_name = 'digital abnormal'
         self.normal_value = False
-        self.notification_text = 'digital abnormal notification'
+
+    def get_notification_text(self, sensor_value):
+        return 'digital abnormal notification'
 
     def read_digital_sensor(self):
         return True
