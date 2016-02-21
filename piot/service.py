@@ -157,13 +157,17 @@ class SensorReadingPersistenceService(BaseSQLAlchemyService):
                 .order_by(desc(SensorReading.timestamp))
 
             count = query.count()
-            readings = query.offset(page_number).limit(page_size).all()
+            readings = query.limit(page_size).offset(page_number).all()
 
             page = PagedResult()
             page.total_pages = int(count / page_size + 1)
             page.page_number = page_number
             page.page_size = page_size
-            page.elements = readings
+
+            if page.page_number > page.total_pages or page.page_number < 0:
+                page.elements = []
+            else:
+                page.elements = readings
 
         return page
 

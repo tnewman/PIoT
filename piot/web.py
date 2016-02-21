@@ -15,7 +15,7 @@ def show_sensor_readings():
     """
 
     page_number = request.args.get('page_number', default=0, type=int)
-    page_size = request.args.get('page_size', default=100, type=int)
+    page_size = request.args.get('page_size', default=20, type=int)
 
     paged_readings = sensor_reading.all_reversed(page_number, page_size)
 
