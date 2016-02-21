@@ -184,6 +184,24 @@ class TestSensorReadingPersistenceService:
 
         assert len(readings) == 2
 
+    def test_all_reversed_bad_paging(self, sqlalchemy):
+        service = SensorReadingPersistenceService()
+
+        older = AnalogSensorReading()
+        older.timestamp = datetime.now()
+
+        newer = DigitalSensorReading()
+        newer.timestamp = datetime.now()
+
+        service.create(older)
+        service.create(newer)
+
+        paged = service.all_reversed(1000, 1)
+        assert paged.elements == []
+
+        paged = service.all_reversed(-1, 1)
+        assert paged.elements == []
+
 
 class TestSensorReadingSchedulingService:
     def test_sensor_reading_job_analog_below_normal(self, sensormodule,
