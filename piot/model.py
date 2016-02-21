@@ -13,6 +13,15 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
+class PagedResult:
+    """ Paged Query Results
+    """
+
+    page_number = int()
+    page_size = int()
+    total_pages = int()
+    elements = []
+
 class SensorReading(Base):
     """ Sensor Reading
     """

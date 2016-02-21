@@ -33,4 +33,4 @@ class TestTwilioSMSNotification:
         twilio.send_notification('test message')
 
         twilio.twilio_client.messages.create.assert_called_with(
-                body='test message', to='send', from_='receive')
+                body='test message', to='receive', from_='send')

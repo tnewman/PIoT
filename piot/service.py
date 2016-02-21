@@ -11,7 +11,8 @@ from sqlalchemy.orm import sessionmaker
 from piot import config
 from piot.sensor import SensorClasses
 from piot.sensor.base import BaseAnalogSensor, BaseDigitalSensor
-from piot.model import NotificationEvent, AnalogSensorReading, DigitalSensorReading, SensorReading
+from piot.model import NotificationEvent, AnalogSensorReading, \
+    DigitalSensorReading, PagedResult, SensorReading
 from piot.notification import TwilioSMSNotification
 
 logger = logging.getLogger(__name__)
@@ -141,17 +142,30 @@ class SensorReadingPersistenceService(BaseSQLAlchemyService):
 
         super().__init__(SensorReading)
 
-    def all_reversed(self):
+    def all_reversed(self, page_number, page_size):
         """ Reads all sensor readings in reverse order by timestamp.
-        :return: All sensor readings in reverse order by timestamp.
-        :rtype: list of piot.model.SensorReading
+        :param page_number: The number of the record page to retrieve.
+        :type page_number: int
+        :param page_size: The size of each record page.
+        :type page_size: int
+        :return: Paged sensor readings in reverse order by timestamp.
+        :rtype: piot.model.Paged
         """
 
         with transaction_scope() as session:
-            readings = session.query(SensorReading).with_polymorphic('*')\
-                .order_by(desc(SensorReading.timestamp)).all()
+            query = session.query(SensorReading).with_polymorphic('*')\
+                .order_by(desc(SensorReading.timestamp))
 
-        return readings
+            count = query.count()
+            readings = query.offset(page_number).limit(page_size).all()
+
+            page = PagedResult()
+            page.total_pages = int(count / page_size + 1)
+            page.page_number = page_number
+            page.page_size = page_size
+            page.elements = readings
+
+        return page
 
 
 class SensorReadingSchedulingService:

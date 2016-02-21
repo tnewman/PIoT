@@ -27,6 +27,8 @@ class TestWeb:
         assert b'Analog' in rv.data
         assert b'0 (testunit)' in rv.data
         assert str.encode(str(timestamp)) in rv.data
+        assert b'newer' not in rv.data
+        assert b'older' not in rv.data
 
     def test_index_digital_sensor_reading(self, sqlalchemy):
         service = SensorReadingPersistenceService()

@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for reading in readings %}
+                {% for reading in paged_readings.elements %}
                 <tr>
                     <td>{{ reading.name }}</td>
                     {% if reading.sensor_type == 'analogsensorreading' %}
@@ -42,6 +42,18 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% if paged_readings.page_number - 1 > 0 %}
+        <form action="" method="get">
+            <input type="hidden" name="page_number" value="{{ paged_readings.page_number - 1 }}" />
+            <button type="submit" class="btn btn-default">Newer</button>
+        </form>
+        {% endif %}
+        {% if paged_readings.page_number + 1 < paged_readings.total_pages %}
+        <form action="" method="get">
+            <input type="hidden" name="page_number" value="{{ paged_readings.page_number + 1 }}" />
+            <button type="submit" class="btn btn-default">Older</button>
+        </form>
+        {% endif %}
     </div>
     <script src="{{ url_for('static', filename='jquery/jquery-1.12.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>

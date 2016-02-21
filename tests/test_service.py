@@ -173,8 +173,12 @@ class TestSensorReadingPersistenceService:
         service.create(older)
         service.create(newer)
 
-        readings = service.all_reversed()
+        paged = service.all_reversed(0, 100)
+        assert paged.page_number == 0
+        assert paged.page_size == 100
+        assert paged.total_pages == 1
 
+        readings = paged.elements
         assert readings[0].timestamp == newer.timestamp
         assert readings[1].timestamp == older.timestamp
 
