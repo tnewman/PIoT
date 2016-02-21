@@ -18,9 +18,16 @@ class PagedResult:
     """
 
     page_number = int()
+    """ The Current Page Number """
+
     page_size = int()
+    """ The Size of Each Page """
+
     total_pages = int()
+    """ The Total Number of Pages """
+
     elements = []
+    """ Elements for the Current Page """
 
 class SensorReading(Base):
     """ Sensor Reading
