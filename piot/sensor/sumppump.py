@@ -15,9 +15,9 @@ class SumpPump(BaseAnalogSensor):
         self.error_sentinel = None
 
     def get_notification_text(self, sensor_value):
-        return 'Sump Pump Monitor - High Water Level - (' + \
+        return 'Sump Pump Monitor - High Water Level (' + \
                str(sensor_value) + ' ' + self.unit + \
-               ') Please check the sump pump.'
+               ') - Please check the sump pump.'
 
     def read_analog_sensor(self):
         """ Reads the Sump Pump sensor.
