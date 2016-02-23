@@ -32,6 +32,10 @@ To build the sump pump monitor, you will need to acquire the following parts:
 +---------------------------------------+----------+
 | Velcro Strip                          | 1        |
 +---------------------------------------+----------+
+| Adafruit Pi Cobbler                   | 1        |
++---------------------------------------+----------+
+| Adafruit Pi Box                       | 1        |
++---------------------------------------+----------+
 
 Assembly
 --------
@@ -40,7 +44,10 @@ Assembly
    Failure to follow the assembly instructions exactly may result in damage
    to your components. Please be careful!
 
-Assemble the electrical components using the wiring diagram below.
+Assemble the electrical components using the wiring diagram below. In 
+addition to following the diagram, you will need to connect the Pi 
+Cobbler to the Raspberry Pi and install the Raspberry Pi's case 
+as shown below.
 
 .. figure:: diagrams/PIoTDistanceBreadBoardWiringDiagram.png
    :alt: Wiring Diagram
@@ -48,5 +55,5 @@ Assemble the electrical components using the wiring diagram below.
 You will then have a fully-assembled sump pump monitor similar to the one
 below and can setup the Raspberry Pi.
 
-.. figure:: images/assembled.jpg
+.. figure:: images/assembled2.jpg
    :alt: Assembled Sump Pump Monitor

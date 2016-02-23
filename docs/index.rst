@@ -19,7 +19,7 @@ detects that something has gone wrong. PIoT has a sensor plugin system,
 so you can add plugins for your own sensors in addition to those that 
 are provided out of the box.
 
-.. figure:: images/distancesensor.jpg
+.. figure:: images/fieldinstallation.jpg
    :alt: PIoT Distance Sensor
    
    Raspberry Pi with a distance sensor used to develop the PIoT 
