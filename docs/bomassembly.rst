@@ -49,11 +49,11 @@ addition to following the diagram, you will need to connect the Pi
 Cobbler to the Raspberry Pi and install the Raspberry Pi's case 
 as shown below.
 
-.. figure:: diagrams/PIoTDistanceBreadBoardWiringDiagram.png
-   :alt: Wiring Diagram
+.. figure:: images/PIoT1.jpg
+   :alt: Wiring
 
 You will then have a fully-assembled sump pump monitor similar to the one
 below and can setup the Raspberry Pi.
 
-.. figure:: images/assembled2.jpg
-   :alt: Assembled Sump Pump Monitor
+.. figure:: images/PIoT2.jpg
+   :alt: Fully Assembled
