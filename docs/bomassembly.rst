@@ -5,7 +5,7 @@ Bill of Materials
 -----------------
 
 .. TIP::
-   It is suggested that you comparison shop using Dr. Google to find the best
+   It is suggested that you comparison shop using Google to find the best
    price. The author was unable to find every component from the same site at
    a competitive price.
 
