@@ -57,3 +57,18 @@ connected to your WiFi network when it reboots.
     WiFi or ethernet connection cannot successfully connect. If you want to
     use one network connection, do not use the other. For example, if you want
     to use the WiFi, do not connect the Ethernet connection.
+
+Expand the SD Card
+------------------
+
+When the Raspbian image is copied to the SD card, the operating system partition 
+will not take up the entire SD card. The SD card should be expanded.
+
+Enter the Raspberry Pi configuration tool.
+
+.. code-block:: bash
+
+    sudo raspi-config --expand-rootfs
+
+Reboot the Raspberry Pi with sudo reboot. The Raspberry Pi's partition should 
+now use the entire SD card.
