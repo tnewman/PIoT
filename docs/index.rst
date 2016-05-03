@@ -43,7 +43,7 @@ Acknowledgements
 
 PIoT was authored by Thomas Newman with guidance from Dr. Chung at 
 Lawrence Technological University as part of the Concentration Project 
-1 masters degree course.
+1 course for the Masters of Science in Computer Science degree.
 
 Table of Contents
 -----------------
