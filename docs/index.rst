@@ -38,6 +38,13 @@ you from a flooded basement.
 Of course, you are only limited by your imagination and can use PIoT to
 monitor any sensor you are willing to write a plugin for.
 
+Acknowledgements
+----------------
+
+PIoT was authored by Thomas Newman with guidance from Dr. Chung at 
+Lawrence Technological University as part of the Concentration Project 
+1 masters degree course.
+
 Table of Contents
 -----------------
 
